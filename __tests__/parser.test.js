@@ -138,5 +138,14 @@ describe('Parser Tests', () => {
       expect(parse('// Cool comment')).toBe('');
       expect(parse('//')).toBe('');
     });
+
+    test('can operate floating point numbers', () => {
+      expect(parse('1 - 2.0')).toBe(-1);
+      expect(parse('10 - 43.2e-1 - 3')).toBeCloseTo(2.68);
+      expect(parse('7 - 5E+3')).toBe(-4993);
+      expect(parse('7 - 5e+3')).toBe(-4993);
+      expect(parse('34 - 50e-1')).toBe(29);
+      expect(parse('230E-1')).toBe(23);
+    });
   });
 });
