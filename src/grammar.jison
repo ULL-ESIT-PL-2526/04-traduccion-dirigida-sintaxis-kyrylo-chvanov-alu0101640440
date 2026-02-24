@@ -3,6 +3,7 @@
 %%
 \s+                   { /* skip whitespace */; }
 [0-9]+                { return 'NUMBER';       }
+\/\/.*                { return 'COMMENT';      }
 "**"                  { return 'OP';           }
 [-+*/]                { return 'OP';           }
 <<EOF>>               { return 'EOF';          }
@@ -17,6 +18,10 @@
 expressions
     : expression EOF
         { return $expression; }
+    | expression COMMENT EOF
+        { return $expression; }
+    | COMMENT EOF
+        { return ''; }
     ;
 
 expression
