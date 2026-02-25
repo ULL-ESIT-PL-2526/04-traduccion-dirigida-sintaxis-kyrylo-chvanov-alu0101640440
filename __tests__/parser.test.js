@@ -48,13 +48,13 @@ describe('Parser Tests', () => {
 
   describe('Operator precedence and associativity', () => {
     test(
-        'should handle left associativity for same precedence operations',
-        () => {
-          expect(parse('10 - 4 - 3')).toBe(3);    // (10 - 4) - 3 = 3
-          expect(parse('7 - 5 - 1')).toBe(1);     // (7 - 5) - 1 = 1
-          expect(parse('20 / 4 / 2')).toBe(2.5);  // (20 / 4) / 2 = 2.5
-          expect(parse('8 / 2 / 2')).toBe(2);     // (8 / 2) / 2 = 2
-        });
+      'should handle left associativity for same precedence operations',
+      () => {
+        expect(parse('10 - 4 - 3')).toBe(3);    // (10 - 4) - 3 = 3
+        expect(parse('7 - 5 - 1')).toBe(1);     // (7 - 5) - 1 = 1
+        expect(parse('20 / 4 / 2')).toBe(2.5);  // (20 / 4) / 2 = 2.5
+        expect(parse('8 / 2 / 2')).toBe(2);     // (8 / 2) / 2 = 2
+      });
   });
 
   describe('Complex expressions', () => {
@@ -62,7 +62,7 @@ describe('Parser Tests', () => {
       expect(parse('1 + 2 + 3 + 4')).toBe(10);  // ((1 + 2) + 3) + 4 = 10
       expect(parse('2 * 3 * 4')).toBe(24);      // (2 * 3) * 4 = 24
       expect(parse('100 - 20 - 10 - 5'))
-          .toBe(65);  // ((100 - 20) - 10) - 5 = 65
+        .toBe(65);  // ((100 - 20) - 10) - 5 = 65
     });
   });
 
@@ -135,8 +135,8 @@ describe('Parser Tests', () => {
       expect(parse('1 - 2 // hello')).toBe(-1);
       expect(parse('10 - 4 - 3 //')).toBe(3);
       expect(parse('7 - 5 // - 1')).toBe(2);
-      expect(parse('// Cool comment')).toBe('');
-      expect(parse('//')).toBe('');
+      expect(() => parse('// Cool comment')).toThrow();
+      expect(() => parse('//')).toThrow();
     });
 
     test('can operate floating point numbers', () => {
