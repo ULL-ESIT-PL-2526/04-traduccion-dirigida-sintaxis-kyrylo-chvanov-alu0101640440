@@ -9,7 +9,7 @@
   "scripts": {
     "build": "jison src/grammar.jison -o src/parser.js",
     "start": "npm run build && node src/index.js",
-    "test": "jest"
+    "test": "npm run build && jest"
   },
   "engines": {
     "node": ">= 24",
@@ -22,9 +22,15 @@
     "type": "git",
     "url": "git+https://github.com/ULL-ESIT-PL-2526/04-tds-template.git"
   },
-  "keywords": ["jison", "parser", "syntax directed translation"],
+  "keywords": [
+    "jison",
+    "parser",
+    "syntax directed translation"
+  ],
   "author": "Casiano Rodriguez-Leon",
-  "contributors": ["Coromoto Leon"],
+  "contributors": [
+    "Coromoto Leon"
+  ],
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
@@ -36,7 +42,10 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["**/__tests__/**/*.test.js", "**/?(*.)+(spec|test).js"],
+    "testMatch": [
+      "**/__tests__/**/*.test.js",
+      "**/?(*.)+(spec|test).js"
+    ],
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/**/index.js",
