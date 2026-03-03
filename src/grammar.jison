@@ -4,8 +4,9 @@
 \s+                                                 { /* skip whitespace */; }
 \/\/.*                                              { /* skip comment */;    }
 [0-9]+(\.[0-9]+)?([eE][-+][0-9]+)?                  { return 'NUMBER';       }
-"**"                                                { return 'OP';           }
-[-+*/]                                              { return 'OP';           }
+"**"                                                { return 'OPOW';         }
+[*/]                                                { return 'OPMU';         }
+[-+]                                                { return 'OPAD';         }
 <<EOF>>                                             { return 'EOF';          }
 .                                                   { return 'INVALID';      }
 /lex
@@ -21,8 +22,22 @@ expressions
     ;
 
 expression
-    : expression OP term
-        { $$ = operate($OP, $expression, $term); }
+    : expression OPAD $expression_mu
+        { $$ = operate($OPAD, $expression, $expression_mu); }
+    | expression_mu
+        { $$ = $expression_mu; }
+    ;
+
+expression_mu
+    : expression_mu OPMU expression_pow
+        { $$ = operate($OPMU, $expression_mu, $expression_pow); }
+    | expression_pow
+        { $$ = $expression_pow; }
+    ;
+
+expression_pow
+    : term OPOW expression_pow
+        { $$ = operate($OPOW, $term, $expression_pow); }
     | term
         { $$ = $term; }
     ;
