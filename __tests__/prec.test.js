@@ -70,4 +70,34 @@ describe('Parser Precedence and Associativity Tests', () => {
       expect(parse("2.35 * 3 + 4 * 5.0")).toBeCloseTo(27.05);     // (2.35 * 3) + (4 * 5)
     });
   });
+
+  describe('Parenthesis calculations', () => {
+    test('should override default precedence with parentheses', () => {
+      expect(parse("(1 + 2) * 3")).toBe(9);              // (1 + 2) * 3
+      expect(parse("1 + (2 * 3)")).toBe(7);              // 1 + (2 * 3)
+      expect(parse("(2 + 3) * 4")).toBe(20);             // (2 + 3) * 4
+      expect(parse("2 * (3 + 4)")).toBe(14);             // 2 * (3 + 4)
+      expect(parse("(1 + 2) * (3 + 4)")).toBe(21);       // (1 + 2) * (3 + 4)
+    });
+
+    test('should handle nested parentheses', () => {
+      expect(parse("((1 + 2) * (3 + 4))")).toBe(21);     // (1 + 2) * (3 + 4)
+      expect(parse("((2 + 3) * 4) - (5 - 1)")).toBe(16); // ((2 + 3) * 4) - (5 - 1)
+      expect(parse("10 - (2 * (3 + 4))")).toBe(-4);      // 10 - (2 * (3 + 4))
+    });
+
+    test('should handle parentheses with exponentiation', () => {
+      expect(parse("(2 + 3) ** 2")).toBe(25);            // (2 + 3) ** 2
+      expect(parse("2 ** (1 + 2)")).toBe(8);             // 2 ** (1 + 2)
+      expect(parse("(2 ** 3) ** 2")).toBe(64);           // (2 ** 3) ** 2
+      expect(parse("2 ** (3 ** 2)")).toBe(512);          // 2 ** (3 ** 2)
+    });
+
+    test('should handle parentheses with floating point numbers', () => {
+      expect(parse("(1.5 + 2.5) * 2")).toBeCloseTo(8);             // (1.5 + 2.5) * 2
+      expect(parse("(2.35e+3 - 350) / 2")).toBeCloseTo(1000);      // (2350 - 350) / 2
+      expect(parse("(2.0 + 3.0) ** 2")).toBeCloseTo(25);           // (2 + 3) ** 2
+      expect(parse("2 ** (1.0 + 1.0)")).toBeCloseTo(4);            // 2 ** (1 + 1)
+    });
+  });
 });

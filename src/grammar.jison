@@ -1,19 +1,23 @@
 /* Lexer */
 %lex
 %%
-\s+                                                 { /* skip whitespace */; }
-\/\/.*                                              { /* skip comment */;    }
-[0-9]+(\.[0-9]+)?([eE][-+][0-9]+)?                  { return 'NUMBER';       }
-"**"                                                { return 'OPOW';         }
-[*/]                                                { return 'OPMU';         }
-[-+]                                                { return 'OPAD';         }
-<<EOF>>                                             { return 'EOF';          }
-.                                                   { return 'INVALID';      }
+\s+                                                 { /* skip whitespace */;      }
+\/\/.*                                              { /* skip comment */;         }
+\(                                                  { return 'LEFT_PARENTHESIS';  }
+\)                                                  { return 'RIGHT_PARENTHESIS'; }
+[0-9]+(\.[0-9]+)?([eE][-+][0-9]+)?                  { return 'NUMBER';            }
+"**"                                                { return 'OPOW';              }
+[*/]                                                { return 'OPMU';              }
+[-+]                                                { return 'OPAD';              }
+<<EOF>>                                             { return 'EOF';               }
+.                                                   { return 'INVALID';           }
 /lex
 
 /* Parser */
 %start expressions
 %token NUMBER
+%token LEFT_PARENTHESIS
+%token RIGHT_PARENTHESIS
 %%
 
 expressions
@@ -36,15 +40,17 @@ expression_mu
     ;
 
 expression_pow
-    : term OPOW expression_pow
-        { $$ = operate($OPOW, $term, $expression_pow); }
-    | term
-        { $$ = $term; }
+    : parenthesis_or_number OPOW expression_pow
+        { $$ = operate($OPOW, $parenthesis_or_number, $expression_pow); }
+    | parenthesis_or_number 
+        { $$ = $parenthesis_or_number; }
     ;
 
-term
+parenthesis_or_number
     : NUMBER
         { $$ = Number(yytext); }
+    | LEFT_PARENTHESIS expression RIGHT_PARENTHESIS
+        { $$ = $expression; }
     ;
 %%
 
