@@ -134,33 +134,46 @@ pruebas fallan, evidenciando la necesidad de modificar la gramática.
 
 ### 2. Modificación de la gramática para respetar precedencia y asociatividad
 
-En el fichero `src/grammar.jison` se ha reestructurado la gramática para separar claramente los
-distintos niveles de precedencia:
+En el fichero `src/grammar.jison` se ha simplificado la gramática utilizando **un único no terminal
+`expression`** y reglas de precedencia de Jison:
 
-- **`expression`**: maneja los operadores aditivos `+` y `-` (token `OPAD`), asociativos por la izquierda.
-- **`expression_mu`**: maneja los operadores multiplicativos `*` y `/` (token `OPMU`), también
-  asociativos por la izquierda y con mayor precedencia que `expression`.
-- **`expression_pow`**: maneja el operador de potencia `**` (token `OPOW`), asociativo por la
-  derecha y con mayor precedencia que los operadores multiplicativos.
+- En el **léxico**, todos los operadores se clasifican en tres tokens:
+  - `OPAD` para `+` y `-` (operadores aditivos),
+  - `OPMU` para `*` y `/` (operadores multiplicativos),
+  - `OPOW` para `**` (potencia).
+- En la **sección de precedencias** se declara:
+  - `%left OPAD` para hacer `+` y `-` asociativos por la izquierda,
+  - `%left OPMU` para `*` y `/`, también asociativos por la izquierda y con mayor precedencia que `OPAD`,
+  - `%right OPOW` para `**`, asociativo por la derecha y con mayor precedencia que `OPMU`.
+- En la **gramática**, las producciones principales son:
+  - `expression OPAD expression`, `expression OPMU expression`, `expression OPOW expression`,
+    todas evaluadas mediante `operate($2, $1, $3)`,
+  - un no terminal `term` que recoge tanto números (`NUMBER`) como expresiones entre paréntesis
+    (`LEFT_PARENTHESIS expression RIGHT_PARENTHESIS`).
 
-Para cada nivel se aplica la función `operate(op, left, right)` de forma que la estructura de la
-gramática refleja directamente la precedencia y la asociatividad descritas en el guión de la práctica.
+De este modo, la combinación de los tokens `OPAD/OPMU/OPOW` con las reglas de precedencia de Jison
+garantiza que la evaluación respeta la precedencia y asociatividad descritas en el guión de la práctica.
 
-### 3. Tests de precedencia y asociatividad con flotantes
+### 3. Tests de precedencia, flotantes y operadores unarios
 
-Además de los tests ya existentes en `__tests__/parser.test.js`, se ha creado el fichero
-`__tests__/prec.test.js` con un conjunto ampliado de pruebas:
+Además de los tests ya existentes en `__tests__/parser.test.js`, se ha creado y extendido el fichero
+`__tests__/prec.test.js` con un conjunto amplio de pruebas:
 
-- **Pruebas con números enteros** (las indicadas en el enunciado) para verificar que, tras la
-  modificación de la gramática, ahora:
+- **Pruebas con números enteros** (las indicadas en el enunciado) para verificar que:
   - La multiplicación y la división se evalúan antes que la suma y la resta.
   - La potencia tiene la máxima precedencia.
   - La potencia es asociativa por la derecha.
 - **Pruebas con números en punto flotante**, usando notaciones como `2.35e-3`, `2.35e+3`,
   `2.35E-3`, `2.35`, `23` y `2E+3`, combinadas en expresiones aritméticas para comprobar que
   se respeta la misma precedencia y asociatividad que con enteros.
+- **Pruebas con operadores unarios `+` y `-`**, tanto sobre números sueltos como combinados con
+  operaciones binarias y paréntesis:
+  - Casos como `-3`, `+3`, `1 ++ 2`, `1 -- 2`, `2 * -3`, `10 / -2`, `(-2) ** 3`,
+  - y expresiones más complejas como `1.5 + (-2) ** 3 * (4 - 6.0 / 3)` o
+    `((1 + 2.5) * (-3) ** 2) / +(4 - 1.0 / 2)`.
 
-Estas pruebas se apoyan en `toBeCloseTo` de Jest para comprobar resultados con decimales.
+Estas pruebas se apoyan en `toBeCloseTo` de Jest para comprobar resultados con decimales y cubren
+una gran variedad de combinaciones de operadores, paréntesis, enteros y flotantes.
 
 ### 4. Soporte de expresiones entre paréntesis
 
@@ -169,28 +182,27 @@ tal y como indica el guión:
 
 - En el **léxico**, se han introducido los tokens `LEFT_PARENTHESIS` y `RIGHT_PARENTHESIS` para
   reconocer `(` y `)`.
-- En la **gramática**, se ha definido el no terminal `parenthesis_or_number`:
-  - `NUMBER` se convierte directamente en un valor numérico (`Number(yytext)`).
-  - `( expression )` devuelve el valor de la subexpresión interna, implementando la regla
-    `F → ( E )` del guión.
-- El no terminal `expression_pow` se ha redefinido para que trabaje sobre `parenthesis_or_number`,
-  lo que permite combinar paréntesis con el operador de potencia respetando la precedencia.
+- En la **gramática**, el no terminal `term` permite:
+  - reducir un `NUMBER` directamente a su valor (`Number(yytext)`),
+  - o bien reconocer `( expression )` y devolver el valor de la subexpresión interna.
 
-Con estos cambios, las expresiones entre paréntesis se evalúan correctamente y pueden anidarse.
+Con estos cambios, las expresiones entre paréntesis se evalúan correctamente, pueden anidarse y
+combinarse con todos los operadores (`+`, `-`, `*`, `/`, `**`) y con operadores unarios.
 
-### 5. Tests para expresiones entre paréntesis
+### 5. Tests para expresiones entre paréntesis y casos límite
 
-Finalmente, en `__tests__/prec.test.js` se ha añadido un bloque específico de tests para
-comprobar el comportamiento de los paréntesis:
+En `__tests__/prec.test.js` se han añadido bloques específicos de tests para:
 
 - **Sobrescritura de la precedencia por defecto**:
   - Expresiones como `(1 + 2) * 3`, `2 * (3 + 4)` o `(1 + 2) * (3 + 4)` demuestran que los
     paréntesis fuerzan el orden de evaluación esperado.
 - **Paréntesis anidados**:
   - Casos como `((1 + 2) * (3 + 4))` o `10 - (2 * (3 + 4))` verifican el manejo de anidamiento.
-- **Combinación con potencia y flotantes**:
-  - Expresiones como `(2 + 3) ** 2`, `2 ** (1 + 2)` o `(1.5 + 2.5) * 2` validan que los paréntesis
-    interactúan correctamente con el operador de potencia y con números en punto flotante.
+- **Combinación con potencia, flotantes y unarios**:
+  - Expresiones como `(2 + 3) ** 2`, `2 ** (1 + 2)`, `(1.5 + 2.5) * 2`,
+    `2E+3 / (-(1 + 1) + 6.0)` o `((+2.0) ** 3 - (-4.0 / 2)) * (1.5 + -0.5)` muestran que
+    paréntesis, números en punto flotante, notación científica y operadores unarios conviven
+    correctamente respetando la precedencia.
 
 ## Resultados
 
@@ -201,6 +213,9 @@ Tras las modificaciones realizadas:
 - El analizador es capaz de **reconocer y evaluar correctamente números en punto flotante** en
   distintas notaciones (con y sin exponente).
 - Se ha añadido soporte completo para **expresiones entre paréntesis**, incluyendo anidamiento y
-  combinación con potencia.
+  combinación con todos los operadores, así como para el uso de **operadores unarios `+` y `-`**
+  en distintos contextos.
+- Se ha incorporado lógica específica para **detectar y rechazar divisiones por cero**, de forma
+  que expresiones como `5 / 0` o `0 / 0` producen un error controlado.
 - Todos los tests definidos en `parser.test.js` y `prec.test.js` se ejecutan correctamente,
   proporcionando evidencia automática de que la implementación cumple los requisitos de la práctica.
