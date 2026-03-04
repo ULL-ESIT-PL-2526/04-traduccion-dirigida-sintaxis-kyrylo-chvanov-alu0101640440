@@ -100,4 +100,68 @@ describe('Parser Precedence and Associativity Tests', () => {
       expect(parse("2 ** (1.0 + 1.0)")).toBeCloseTo(4);            // 2 ** (1 + 1)
     });
   });
+
+  describe('Unary plus and minus', () => {
+    test('should handle unary operators on numbers', () => {
+      expect(parse("-3")).toBe(-3);
+      expect(parse("+3")).toBe(3);
+      expect(parse("-0.5")).toBeCloseTo(-0.5);
+      expect(parse("+2.35e+1")).toBeCloseTo(23.5);
+    });
+
+    test('should handle unary operators combined with binary operators', () => {
+      expect(parse("1 ++ 2")).toBe(3);           // 1 + (+2)
+      expect(parse("1 -- 2")).toBe(3);           // 1 - (-2)
+      expect(parse("-3 + 5")).toBe(2);           // (-3) + 5
+      expect(parse("5 + -3")).toBe(2);           // 5 + (-3)
+      expect(parse("2 * -3")).toBe(-6);          // 2 * (-3)
+      expect(parse("-2 * 3")).toBe(-6);          // (-2) * 3
+      expect(parse("10 / -2")).toBe(-5);         // 10 / (-2)
+      expect(parse("-10 / 2")).toBe(-5);         // (-10) / 2
+      expect(parse("(-2) ** 3")).toBe(-8);       // (-2) ** 3
+      expect(parse("-(1 + 2)")).toBe(-3);        // -(1 + 2)
+      expect(parse("+ (2 + 3)")).toBe(5);        // +(2 + 3)
+    });
+  });
+
+  describe('Invalid operator usage', () => {
+    test('should reject invalid combinations of operators', () => {
+      expect(() => parse("1 ** ** 2")).toThrow();
+      expect(() => parse("1.5 ** ** 2")).toThrow();
+      expect(() => parse("(1 + 2) ** ** 3")).toThrow();
+      expect(() => parse("1 * / 2")).toThrow();
+      expect(() => parse("1.0 * / 2.0")).toThrow();
+      expect(() => parse("1 / * 2")).toThrow();
+      expect(() => parse("1.0 / * 2.0")).toThrow();
+    });
+
+    test('should reject operators in invalid positions', () => {
+      expect(() => parse("** 2")).toThrow();
+      expect(() => parse("** 2.5")).toThrow();
+      expect(() => parse("(1 + 2) **")).toThrow();
+      expect(() => parse("2 **")).toThrow();
+      expect(() => parse("*/ 2")).toThrow();
+      expect(() => parse("*/ 2.0")).toThrow();
+      expect(() => parse("(2.0) */ 3")).toThrow();
+      expect(() => parse("2 */")).toThrow();
+    });
+  });
+
+  describe('Complex combined expressions', () => {
+    test('should handle complex mix of integers, floats, unary operators and precedence', () => {
+      expect(parse("1.5 + (-2) ** 3 * (4 - 6.0 / 3)")).toBeCloseTo(-14.5);
+    });
+
+    test('should respect precedence in nested expression with unary and floats', () => {
+      expect(parse("((1 + 2.5) * -3 ** 2) / +(4 - 1.0 / 2)")).toBeCloseTo(-9);
+    });
+
+    test('should combine scientific notation, unary and division', () => {
+      expect(parse("2E+3 / (-(1 + 1) + 6.0)")).toBeCloseTo(500);
+    });
+
+    test('should handle multiple operators with unary plus and minus inside parentheses', () => {
+      expect(parse("((+2.0) ** 3 - (-4.0 / 2)) * (1.5 + -0.5)")).toBeCloseTo(10);
+    });
+  });
 });

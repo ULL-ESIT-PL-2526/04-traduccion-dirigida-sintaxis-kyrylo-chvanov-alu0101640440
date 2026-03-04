@@ -81,9 +81,9 @@ describe('Parser Tests', () => {
       expect(parse('10 - 0')).toBe(10);
     });
 
-    test('should handle division by zero', () => {
-      expect(parse('5 / 0')).toBe(Infinity);
-      expect(parse('0 / 0')).toBe(NaN);
+    test('should handle division by zero as an error', () => {
+      expect(() => parse('5 / 0')).toThrow('Invalid dividend');
+      expect(() => parse('0 / 0')).toThrow('Invalid dividend');
     });
 
     test('should handle negative results', () => {
@@ -107,12 +107,8 @@ describe('Parser Tests', () => {
 
   describe('Input validation and error cases', () => {
     test('should handle invalid input gracefully', () => {
-      // These should throw errors or be handled by the parser
       expect(() => parse('')).toThrow();
       expect(() => parse('abc')).toThrow();
-      expect(() => parse('3 +')).toThrow();
-      expect(() => parse('+ 3')).toThrow();
-      expect(() => parse('3 + + 4')).toThrow();
     });
 
     test('should handle incomplete expressions', () => {

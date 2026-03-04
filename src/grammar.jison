@@ -18,6 +18,10 @@
 %token NUMBER
 %token LEFT_PARENTHESIS
 %token RIGHT_PARENTHESIS
+%left OPAD
+%left OPMU
+%right UPLUSMINUS
+%right OPOW
 %%
 
 expressions
@@ -26,27 +30,19 @@ expressions
     ;
 
 expression
-    : expression OPAD $expression_mu
-        { $$ = operate($OPAD, $expression, $expression_mu); }
-    | expression_mu
-        { $$ = $expression_mu; }
+    : expression OPAD expression
+        { $$ = operate($OPAD, $1, $3); }
+    | expression OPMU expression
+        { $$ = operate($OPMU, $1, $3); }
+    | expression OPOW expression
+        { $$ = operate($OPOW, $1, $3); }
+    | OPAD expression %prec UPLUSMINUS
+        { $$ = operate($OPAD, 0, $2)}
+    | term
+        { $$ = $term; }
     ;
 
-expression_mu
-    : expression_mu OPMU expression_pow
-        { $$ = operate($OPMU, $expression_mu, $expression_pow); }
-    | expression_pow
-        { $$ = $expression_pow; }
-    ;
-
-expression_pow
-    : parenthesis_or_number OPOW expression_pow
-        { $$ = operate($OPOW, $parenthesis_or_number, $expression_pow); }
-    | parenthesis_or_number 
-        { $$ = $parenthesis_or_number; }
-    ;
-
-parenthesis_or_number
+term
     : NUMBER
         { $$ = Number(yytext); }
     | LEFT_PARENTHESIS expression RIGHT_PARENTHESIS
@@ -59,7 +55,12 @@ function operate(op, left, right) {
         case '+': return left + right;
         case '-': return left - right;
         case '*': return left * right;
-        case '/': return left / right;
+        case '/': {
+            if (right === 0) {
+                throw new Error('Invalid dividend');    
+            }
+            return left / right;
+        }
         case '**': return Math.pow(left, right);
     }
 }
