@@ -21,37 +21,46 @@ profundiza en:
 
 #### 1.1. Escriba la derivación para cada una de las frases
 
-- **4.0-2.0*3.0**:  
+- **4.0-2.0*3.0**
+
 $$
-L \Rightarrow E\,\text{eof}
-\Rightarrow E * T\,\text{eof}
-\Rightarrow E * 3.0\,\text{eof}
-\Rightarrow E - T * 3.0\,\text{eof}
-\Rightarrow E - 2.0 * 3.0\,\text{eof}
-\Rightarrow T - 2.0 * 3.0\,\text{eof}
-\Rightarrow 4.0 - 2.0 * 3.0\,\text{eof}
+\begin{aligned}
+L &\Rightarrow E\,\text{eof} \\
+  &\Rightarrow E * T\,\text{eof} \\
+  &\Rightarrow E * 3.0\,\text{eof} \\
+  &\Rightarrow E - T * 3.0\,\text{eof} \\
+  &\Rightarrow E - 2.0 * 3.0\,\text{eof} \\
+  &\Rightarrow T - 2.0 * 3.0\,\text{eof} \\
+  &\Rightarrow 4.0 - 2.0 * 3.0\,\text{eof}
+\end{aligned}
 $$
 
-- **2**\*\***3**\*\***2**:  
+- **2\*\*3\*\*2**
+
 $$
-L \Rightarrow E\,\text{eof}
-\Rightarrow E\,\text{**}\,T\,\text{eof}
-\Rightarrow E\,\text{**}\,2\,\text{eof}
-\Rightarrow E\,\text{**}\,T\,\text{**}\,2\,\text{eof}
-\Rightarrow E\,\text{**}\,3\,\text{**}\,2\,\text{eof}
-\Rightarrow T\,\text{**}\,3\,\text{**}\,2\,\text{eof}
-\Rightarrow 2\,\text{**}\,3\,\text{**}\,2\,\text{eof}
+\begin{aligned}
+L &\Rightarrow E\,\text{eof} \\
+  &\Rightarrow E\,\text{**}\,T\,\text{eof} \\
+  &\Rightarrow E\,\text{**}\,2\,\text{eof} \\
+  &\Rightarrow E\,\text{**}\,T\,\text{**}\,2\,\text{eof} \\
+  &\Rightarrow E\,\text{**}\,3\,\text{**}\,2\,\text{eof} \\
+  &\Rightarrow T\,\text{**}\,3\,\text{**}\,2\,\text{eof} \\
+  &\Rightarrow 2\,\text{**}\,3\,\text{**}\,2\,\text{eof}
+\end{aligned}
 $$
 
-- **7-4/2**:  
+- **7-4/2**
+
 $$
-L \Rightarrow E\,\text{eof}
-\Rightarrow E / T\,\text{eof}
-\Rightarrow E / 2\,\text{eof}
-\Rightarrow E - T / 2\,\text{eof}
-\Rightarrow E - 4 / 2\,\text{eof}
-\Rightarrow T - 4 / 2\,\text{eof}
-\Rightarrow 7 - 4 / 2\,\text{eof}
+\begin{aligned}
+L &\Rightarrow E\,\text{eof} \\
+  &\Rightarrow E / T\,\text{eof} \\
+  &\Rightarrow E / 2\,\text{eof} \\
+  &\Rightarrow E - T / 2\,\text{eof} \\
+  &\Rightarrow E - 4 / 2\,\text{eof} \\
+  &\Rightarrow T - 4 / 2\,\text{eof} \\
+  &\Rightarrow 7 - 4 / 2\,\text{eof}
+\end{aligned}
 $$
 
 En los tres casos la gramática fuerza una **asociatividad por la izquierda** y no distingue entre
@@ -61,7 +70,7 @@ precedencias de operadores: todos los `op` se tratan igual.
 
 Para representar los árboles utilizo mermaid y la gramática original.
 
-- **4.0-2.0\*3.0** ((4.0 - 2.0) * 3.0)
+- **4.0-2.0\*3.0**
 
 ```mermaid
 graph TD
@@ -81,7 +90,7 @@ graph TD
   T3 --> n3["number: 3.0"]
 ```
 
-- **2\*\*3\*\*2** ((2 ** 3) ** 2)
+- **2\*\*3\*\*2**
 
 ```mermaid
 graph TD
@@ -101,7 +110,7 @@ graph TD
   T3 --> n3["number: 2"]
 ```
 
-- **7-4/2** ((7 - 4) / 2)
+- **7-4/2**
 
 ```mermaid
 graph TD
