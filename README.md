@@ -25,13 +25,13 @@ profundiza en:
 
 $$
 \begin{aligned}
-L &\Rightarrow E\,\text{eof} \\
-  &\Rightarrow E * T\,\text{eof} \\
-  &\Rightarrow E * 3.0\,\text{eof} \\
-  &\Rightarrow E - T * 3.0\,\text{eof} \\
-  &\Rightarrow E - 2.0 * 3.0\,\text{eof} \\
-  &\Rightarrow T - 2.0 * 3.0\,\text{eof} \\
-  &\Rightarrow 4.0 - 2.0 * 3.0\,\text{eof}
+L &\Rightarrow E\ \text{eof} \\
+  &\Rightarrow E * T\ \text{eof} \\
+  &\Rightarrow E * 3.0\ \text{eof} \\
+  &\Rightarrow E - T * 3.0\ \text{eof} \\
+  &\Rightarrow E - 2.0 * 3.0\ \text{eof} \\
+  &\Rightarrow T - 2.0 * 3.0\ \text{eof} \\
+  &\Rightarrow 4.0 - 2.0 * 3.0\ \text{eof}
 \end{aligned}
 $$
 
@@ -39,13 +39,13 @@ $$
 
 $$
 \begin{aligned}
-L &\Rightarrow E\,\text{eof} \\
-  &\Rightarrow E\,\text{\*\*}\,T\,\text{eof} \\
-  &\Rightarrow E\,\text{\*\*}\,2\,\text{eof} \\
-  &\Rightarrow E\,\text{\*\*}\,T\,\text{\*\*}\,2\,\text{eof} \\
-  &\Rightarrow E\,\text{\*\*}\,3\,\text{\*\*}\,2\,\text{eof} \\
-  &\Rightarrow T\,\text{\*\*}\,3\,\text{\*\*}\,2\,\text{eof} \\
-  &\Rightarrow 2\,\text{\*\*}\,3\,\text{\*\*}\,2\,\text{eof}
+L &\Rightarrow E\ \text{eof} \\
+  &\Rightarrow E\ \text{\*\*}\ T\ \text{eof} \\
+  &\Rightarrow E\ \text{\*\*}\ 2\ \text{eof} \\
+  &\Rightarrow E\ \text{\*\*}\ T\ \text{\*\*}\ 2\ \text{eof} \\
+  &\Rightarrow E\ \text{\*\*}\ 3\ \text{\*\*}\ 2\ \text{eof} \\
+  &\Rightarrow T\ \text{\*\*}\ 3\ \text{\*\*}\ 2\ \text{eof} \\
+  &\Rightarrow 2\ \text{\*\*}\ 3\ \text{\*\*}\ 2\ \text{eof}
 \end{aligned}
 $$
 
@@ -53,13 +53,13 @@ $$
 
 $$
 \begin{aligned}
-L &\Rightarrow E\,\text{eof} \\
-  &\Rightarrow E / T\,\text{eof} \\
-  &\Rightarrow E / 2\,\text{eof} \\
-  &\Rightarrow E - T / 2\,\text{eof} \\
-  &\Rightarrow E - 4 / 2\,\text{eof} \\
-  &\Rightarrow T - 4 / 2\,\text{eof} \\
-  &\Rightarrow 7 - 4 / 2\,\text{eof}
+L &\Rightarrow E\ \text{eof} \\
+  &\Rightarrow E / T\ \text{eof} \\
+  &\Rightarrow E / 2\ \text{eof} \\
+  &\Rightarrow E - T / 2\ \text{eof} \\
+  &\Rightarrow E - 4 / 2\ \text{eof} \\
+  &\Rightarrow T - 4 / 2\ \text{eof} \\
+  &\Rightarrow 7 - 4 / 2\ \text{eof}
 \end{aligned}
 $$
 
