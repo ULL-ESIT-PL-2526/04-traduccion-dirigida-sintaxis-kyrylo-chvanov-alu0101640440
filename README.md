@@ -40,12 +40,12 @@ $$
 $$
 \begin{aligned}
 L &\Rightarrow E\ \text{eof} \\
-  &\Rightarrow E\ \text{\*\*}\ T\ \text{eof} \\
-  &\Rightarrow E\ \text{\*\*}\ 2\ \text{eof} \\
-  &\Rightarrow E\ \text{\*\*}\ T\ \text{\*\*}\ 2\ \text{eof} \\
-  &\Rightarrow E\ \text{\*\*}\ 3\ \text{\*\*}\ 2\ \text{eof} \\
-  &\Rightarrow T\ \text{\*\*}\ 3\ \text{\*\*}\ 2\ \text{eof} \\
-  &\Rightarrow 2\ \text{\*\*}\ 3\ \text{\*\*}\ 2\ \text{eof}
+  &\Rightarrow E\ \mathtt{**}\ T\ \text{eof} \\
+  &\Rightarrow E\ \mathtt{**}\ 2\ \text{eof} \\
+  &\Rightarrow E\ \mathtt{**}\ T\ \mathtt{**}\ 2\ \text{eof} \\
+  &\Rightarrow E\ \mathtt{**}\ 3\ \mathtt{**}\ 2\ \text{eof} \\
+  &\Rightarrow T\ \mathtt{**}\ 3\ \mathtt{**}\ 2\ \text{eof} \\
+  &\Rightarrow 2\ \mathtt{**}\ 3\ \mathtt{**}\ 2\ \text{eof}
 \end{aligned}
 $$
 
